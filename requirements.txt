@@ -1,0 +1,14 @@
+Flask
+pymongo
+bcrypt
+requests
+pyopenssl
+pywebview
+python-dotenv
+pygame
+numpy
+scipy
+Pillow
+moviepy
+opencv-python
+pyaudio

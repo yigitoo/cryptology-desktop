@@ -1,0 +1,5 @@
+{
+    "fileToEncrypt": "toEncryption.txt",
+    "outVideoFile": "out.mp4",
+    "keyFile": "sample.key"
+}

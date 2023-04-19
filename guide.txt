@@ -1,0 +1,15 @@
+cli.py - Kriptoloji Projesi Ana Çalıştırılabiliri
+
+--{h|help} veya -{h|help}:
+    Yardım seçeneğini yazdırır (bu yazı).
+
+Şifrelenecek veriyi config.json dosyasında fileToEncrypt anahtarına tanımlı olan dosyaya yerleştiriniz.
+İşlemler funcs.py dosyasında yapılır ve toplamda 3 adet argümanı vardır:
+--clear:
+    Çıktıları silmek amaçlı konulmuş bir garbage collector
+-e: ya da [-ce, --complete-enc]
+    config.json dosyasında tanımlı olan girilen dosya, anahtar ve video adına göre şifrelemeye başlar.
+-d: ya da [-cd, --complete-dec]
+    config.json dosyasında tanımlı olan girilen anahtar ve video adına göre deşifrelemeye başlar.
+-cd: ya da [cli.py -c -d şeklinde ayrı şekilde yazılabilir] 
+    config.json dosyasında tanımlı olan girilen dosya, anahtar ve video adına göre şifreleme işleminden hemen sonra deşifrleme işlemine geçer. (Kontrol İçin)

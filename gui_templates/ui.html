@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ana Sayfa</title>
+    <link rel="stylesheet" href='/gui_static/css/ui.css'>
+    <link rel="stylesheet" href="/gui_static/css/form.css" />
+</head>
+<body>
+    <div id="righter-side">
+        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/mini-bar.png"/></button>
+
+        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/oda servisi.png"/></button>
+
+        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/Odalar.png"/></button>
+
+        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/ziyaretçiler.png"/></button>
+
+        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/bilgiler.png"/></button>
+
+    </div>
+    <div class="login-box">
+        <h2>Kodların Seyyahı Otel Kullanıcı Yönetim Sistemi</h2>
+        <br>
+        <form action="/saveroom" method="POST" autocomplete="off">
+            <div class="user-box">
+                <input type="email" name="email" placeholder="Misafir E-mail" required="">
+            </div>
+            <div class="user-box">
+                <input type='text' class='right-side' class='text-input' placeholder="Misafir TC" />
+            </div>
+            <div class="user-box">
+                <input type='text' class='cdb button' placeholder="Kişi sayısı" />
+            </div>
+            <div class="user-box">
+                <input type='text' class='right-side' class='ti' placeholder="Oda no giriniz" />
+            </div>
+            <div class="user-box">
+                <input type="password" name="password" placeholder="Yatak Sayısı" required="">
+            </div>
+            <a href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <input type="submit" value="Oda Kaydı Oluştur!" />
+            </a>
+            |
+            <a href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <input type="submit" value="Oda Kaydı Sil!" />
+            </a>
+        </form>
+    </div>
+
+
+
+    <div class="decrypt-box">
+        <h2 style="color: white;"><u>Kodların Seyyahı Otel</u> Kullanıcı Bilgileri Yönetim Sistemi</h2>
+        <br>
+        <form action="/saveroom" method="POST" autocomplete="off">
+            <div class="user-box">
+                <input class="dmail" type="email" name="email" placeholder="Misafir E-mail" required="">
+            </div>
+            <a href="#">
+                <input style="height:45px; width:120px; border-radius: 9.5px;" type="submit" value="Bilgileri Deşifrele!" />
+            </a>
+
+            </a>
+        </form>
+    </div>
+
+    
+
+    <div class="emaillist" style="padding: -10%; overflow: scroll; margin-left: 42rem; display: block; width: 400px; height: 910px;">
+        <h1><u>Kullanıcılar:</u></h1>
+        <h1 id='elsst' style="text-align: center;">
+            {{ elist }}
+        </h1>
+    </div>
+
+    <div class="logout-btn" style="">
+
+    </div>
+</body>
+</html>

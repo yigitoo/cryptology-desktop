@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Şifreleme Sonuç Ekranı</title>
+
+</head>
+<body>
+  <p id="bilgi" style="font-size: 71px; font-weight: bold; padding-left: 30px; padding-right: 30px"></p>
+
+  <h2 id="text"></h2>
+  <video width="900" height="900" controls style="padding-left: 30px; padding-right: 30px; ">
+    <source src={{ url_for('static', filename="ftest.mp4") }} type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+<script>
+    var dt = window.location.href.split('=')[1]
+    document.getElementById('bilgi').innerHTML = dt + ' İçin Şifreleme Sonucu'
+</script>
+</body>
+</html>
