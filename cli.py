@@ -569,17 +569,17 @@ if __name__ == "__main__":
     ifname = config['fileToEncrypt']
     ofname = config['outVideoFile']
     kfname = config['keyFile']
-    data = open(ifname, 'r').read()
+    data = open(ifname, 'r+').read()
     outVideo = ofname
     if len(sys.argv) == 1:
         raise SystemExit("Argüman belirtmeniz gerekli")
     if sys.argv[1] in ["--clear", "-cls", "--cls", "-clear", "-C"]:
-        clear_dirs()
+        clear_dirs()    
         
-    if sys.argv[1] == ["-e", "-ce", "--complete-enc"]:
+    if sys.argv[1] in ["-e", "-ce", "--complete-enc"]:
         clear_dirs()
         complete_encryption(data, outVideo, kfname)
-    if sys.argv[1] == ["-d", "-cd", "--complete-dec"]:
+    if sys.argv[1] in ["-d", "-cd", "--complete-dec"]:
         complete_decryption(outVideo, kfname)
         
     if sys.argv[1] == "-ced" or (sys.argv[1] == "-c" and sys.argv[2] == "-d"):
