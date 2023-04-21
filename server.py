@@ -120,22 +120,39 @@ def islemler():
 def giris():
     return render_template('login.html')
 
+@app.route('/anasayfa/')
+@app.route('/anasayfa')
+@app.route('/index/')
+@app.route('/index')
+@app.route('/')
+def index():
+    if not is_logged():
+        return redirect('/giris')
+    
+    session_user = get_user_from_id(session['user_id'])
+    if session_user['admin']:
+        elist = open('db/maillist.csv','r').read().replace(' ','\n')
+        return render_template('admin_index.html', elist=elist)
+    else:
+        return render_template('index.html', user=session_user) 
+    
 @app.route('/admin/anasayfa/')
 @app.route('/admin/anasayfa')
 @app.route('/admin/index/')
 @app.route('/admin/index')
 @app.route('/admin/')
 @app.route('/admin', methods=["GET", "POST"])
-def ui():
+def admin_index():
     if not is_logged():
         return redirect('/giris')
     
     session_user = get_session_user()
+    time.sleep(1.5)
     if not session_user['admin']:
         return redirect('/')
 
     elist = open('db/maillist.csv','r').read().replace(' ','\n')
-    return render_template('ui.html', elist=elist)
+    return render_template('admin_index.html', elist=elist)
 
 @app.route('/api/ce/')
 @app.route('/api/ce', methods=["POST"])
