@@ -87,6 +87,13 @@ app.secret_key = 'yigitinsifresi'
 
 @app.route('/modify_json/<string:fte>/<string:key>/<string:out>/', methods=["GET"])
 def modify_json(fte, key, out):
+    if not is_logged():
+        return redirect('/giris')
+    
+    session_user = get_session_user()
+    if not session_user['admin']:
+        return redirect('/')
+
     dictionary = {
         "fileToEncrypt": fte,
         "outVideoFile": out,
@@ -98,21 +105,37 @@ def modify_json(fte, key, out):
     
     return redirect("/islemler")
 
+@app.route('/islemler')
+def islemler():
+    if not is_logged():
+        return redirect('/giris')
+    
+    session_user = get_session_user()
+    if not session_user['admin']:
+        return redirect('/')
+
+    return render_template('islemler.html')
+
 @app.route('/giris')
 def giris():
     return render_template('login.html')
 
-@app.route('/anasayfa/')
-@app.route('/anasayfa')
-@app.route('/index/')
-@app.route('/index')
-@app.route('/', methods=["GET", "POST"])
+@app.route('/admin/anasayfa/')
+@app.route('/admin/anasayfa')
+@app.route('/admin/index/')
+@app.route('/admin/index')
+@app.route('/admin/')
+@app.route('/admin', methods=["GET", "POST"])
 def ui():
-    if is_logged():
-        elist = open('db/maillist.csv','r').read().replace(' ','\n')
-        return render_template('ui.html', elist=elist)
-    else:
-        return redirect('/giris')    
+    if not is_logged():
+        return redirect('/giris')
+    
+    session_user = get_session_user()
+    if not session_user['admin']:
+        return redirect('/')
+
+    elist = open('db/maillist.csv','r').read().replace(' ','\n')
+    return render_template('ui.html', elist=elist)
 
 @app.route('/api/ce/')
 @app.route('/api/ce', methods=["POST"])
@@ -120,6 +143,10 @@ def api_ce(data):
     if not is_logged():
         return redirect('/giris')
     
+    session_user = get_session_user()
+    if not session_user['admin']:
+        return redirect('/')
+
     session_user = get_session_user()
     random_id = str(uuid.uuid4())
     data = ""
@@ -172,6 +199,14 @@ def api_ce(data):
 @app.route('/api/cd/')
 @app.route('/api/cd', methods=["POST", "GET"])
 def api_cd():
+    if not is_logged():
+        return redirect('/giris')
+    
+    session_user = get_session_user()
+    if not session_user['admin']:
+        return redirect('/')
+
+
     global not_exist_situtations
     dosya = request.files['fileupload']
     dosya_adi = dosya.filename
@@ -253,16 +288,21 @@ def register():
     telefon_numarasi = request.form['telefon_numarasi']
 
     # Kullanıcı veritabanına ekleme kısmı
-    is_user_exist = database_user.find_one({"email": email})
+    is_user_exist = database_user.find_one({
+        "email": email,
+        "tc_kimlik_no": tc_kimlik_no,
+        "telefon_numarasi": telefon_numarasi,
+    })
     if (is_user_exist in not_exist_situtations):
         database_user.insert_one({
             ######################################################
-            'kullainici_adi': username,                          #
+            'kullanici_adi': username,                           #
             'sifre': password,                                   #
             'email': email,                                      #
             '_id': str(uuid.uuid4()),                            #
             'isim': isim,                                        #
             'soyisim': soyisim,                                  #
+            'admin': False,                                      #
             'yas': yas,                                          #
             'tc_kimlik_no': tc_kimlik_no,                        #
             'telefon_numarasi': telefon_numarasi                 #
