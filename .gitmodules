@@ -1,0 +1,3 @@
+[submodule "cli-compiled"]
+	path = cli-compiled
+	url = https://github.com/yigitoo/cli-compiled.git

@@ -590,7 +590,6 @@ if __name__ == "__main__":
     if sys.argv[1] in ["-h", "--h", "--help", "-help"] :
         guide = open('guide.txt', 'r').read()
         print(guide)
-        guide.close()
 
     if sys.argv[1] == "-s":
         b = input('C/D: ')
