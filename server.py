@@ -6,6 +6,7 @@ from db import (
 )
 # third party lib's
 import random
+from bson.objectid import ObjectId
 from cli import complete_encryption, complete_decryption
 import os
 import requests
@@ -72,10 +73,20 @@ def get_session_user() -> dict:
         return None
     user_id = session['user_id']
     # fetch the user from database somehow
-    user = database_user.find_one({
+    return database_user.find_one({
         '_id': user_id
     })
-    return user
+    '''
+        {
+            kullanici_adi: yigit
+            isim: Yiğit
+            soyisim: GÜMÜŞ
+            yas: 16
+            tc: 12345678901
+            tel: 05523548503
+            admin: true
+        }
+    '''
 
 def get_user_from_id(user_id: str) -> dict:
     return database_user.find_one({
@@ -84,6 +95,76 @@ def get_user_from_id(user_id: str) -> dict:
 
 app = Flask(__name__, static_folder='gui_static', template_folder='gui_templates', instance_relative_config=True)
 app.secret_key = 'yigitinsifresi'
+
+@app.route('/oda_servisi', methods=["GET", "POST"])
+def oda_servisi():
+    if not is_logged():
+        return redirect('/giris')
+    session_user = get_session_user()
+
+    return render_template('oda_servisi.html', user=session_user)
+@app.route('/odalar', methods=["GET", "POST"])
+def oda_islemleri():
+    if not is_logged():
+        return redirect('/giris')
+    session_user = get_session_user()
+
+    if session_user['admin'] == True:
+        reservations = database_reservation.find({})
+        
+        is_full, whoose = [], []
+        
+        for _ in range(50):
+            is_full.append(False)
+            whoose.append(False)
+        for reservation in reservations:
+            is_full[reservation['oda_no'] - 1] = True
+            whoose[reservation['oda_no'] - 1] = reservation['whoose']
+
+        oda_bilgileri = []
+
+        for i in range(50):
+            oda_bilgileri[i] = [is_full, whoose]
+        return render_template('admin_odalar.html', oda_bilgileri = oda_bilgileri)
+    else:
+        reservations_cursor = database_reservation.find({
+            "whoose": session_user['_id']
+        })
+        reservations = []
+        if reservations_cursor not in not_exist_situtations:
+            for reservation in reservations_cursor:
+                reservations.append(reservation)
+
+            oda_bilgileri = []
+            print(reservations)
+            for index in range(0, len(reservations)):
+                oda_bilgileri[index] = reservations[index]['oda_no']
+
+        return render_template('odalar.html', oda_bilgileri = oda_bilgileri)
+@app.route('/profile', methods=["GET", "POST"])
+def profile():
+    session_user = get_session_user()
+    if session_user == None:
+        return redirect('/giris')
+    rezervasyonlari = database_reservation.find({
+        'whoose': session_user['_id']
+    })
+    oda_nolar_list = []
+    for data in rezervasyonlari:
+        print(data)
+        oda_nolar_list.append(data['oda_no'])
+    print(oda_nolar_list)    
+    
+    oda_no_string = ""
+    for oda_no in range(len(oda_nolar_list)):
+        if oda_no == (len(oda_nolar_list) - 1):
+            oda_no_string += f"{oda_nolar_list[oda_no]} nolu odalar."
+            break
+        oda_no_string += f"{oda_nolar_list[oda_no]}, "
+        print(oda_no_string)
+    
+    session_user['oda_nolar'] = oda_no_string
+    return render_template('profile.html', user = session_user)
 
 @app.route('/modify_json/<string:fte>/<string:key>/<string:out>/', methods=["GET"])
 def modify_json(fte, key, out):
@@ -129,8 +210,9 @@ def index():
     if not is_logged():
         return redirect('/giris')
     
-    session_user = get_user_from_id(session['user_id'])
-    if session_user['admin']:
+    session_user = get_session_user() 
+    print(session_user)
+    if session_user["admin"] == True:
         elist = open('db/maillist.csv','r').read().replace(' ','\n')
         return render_template('admin_index.html', elist=elist)
     else:
@@ -147,7 +229,6 @@ def admin_index():
         return redirect('/giris')
     
     session_user = get_session_user()
-    time.sleep(1.5)
     if not session_user['admin']:
         return redirect('/')
 
@@ -184,62 +265,63 @@ def api_ce(data):
         baslangic_tarihi = splitted_message[0]
         bitis_tarihi = splitted_message[1]
         otel_name = splitted_message[2]
+        
         database_reservation.insert_one({
-            '_id': session_user['_id'],
+            '_id': random_id,
             'case_id': random_id,
+            'whoose': session_user['_id'],
             'baslangic_tarihi': baslangic_tarihi,
             'bitis_tarihi': bitis_tarihi,
-            'oda_no': random.randint(181, 1453),
+            'oda_no': random.randint(1, 50),
             'otel_ismi': otel_name,
         })
     else:
         splitted_message = message.split(';') # SIPARIS:COLA|3;HAMBURGER|2
         siparis_nested_list = []
+        
         for i in len(splitted_message):
             siparisler = splitted_message[i].split('|')
             siparis_nested_list[i] = [siparisler[0], int(siparisler[1])] # => [["COLA", 3], ["HAMBURGER",2]]
         
         database_siparis.insert_one({
-            '_id': session_user['_id'],
-            'case_id': random_id,
+            '_id': random_id,
+            'whoose': session_user['_id'],
             'istek_siparis': siparis_nested_list,
         })
 
     out_format = f"{session_user['_id']}_{random_id}"
-    complete_encryption(data, f'{out_format}.mp4', f'{out_format}.key')
+    complete_encryption(data, f'veri/{out_format}.mp4', f'veri/{out_format}.key')
 
     if os.fileexist(f'{out_format}.mp4') and os.fileexist(f'{out_format}.key'):
         return render_template('sifreleme_sonuc.html')
     else:
         return render_template('try_again.html')
 
-@app.route('/api/cd/')
-@app.route('/api/cd', methods=["POST", "GET"])
-def api_cd():
+@app.route('/api/cd/<string:data>', methods=["POST", "GET"])
+def api_cd(data: str):
+    global not_exist_situtations
     if not is_logged():
         return redirect('/giris')
-    
+
     session_user = get_session_user()
     if not session_user['admin']:
         return redirect('/')
 
 
-    global not_exist_situtations
-    dosya = request.files['fileupload']
-    dosya_adi = dosya.filename
+    dosya_adi = data
     if allowed_file(dosya_adi):
         splitted_dosya_adi = dosya_adi.split('_')
         user_id = splitted_dosya_adi[0]
         case_id = splitted_dosya_adi[1]
 
         reservation_case = database_reservation.find_one({
-            '_id': user_id,
-            'case_id': case_id
+            '_id': case_id,
+            'whoose': user_id
         })
 
         siparis_case = database_siparis.find_one({
-            '_id': user_id,
-            'case_id': case_id
+            '_id': case_id,
+            'whoose': user_id
         })
 
         # efendim patient //_()_\\

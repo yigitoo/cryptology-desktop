@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahip olduğunuz odalar ~ Kodların Seyyahı Otel</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta name=application-name content="GalBul">
     <meta name="mobile-web-app-capable" content="yes">
@@ -24,23 +28,18 @@
 </nav>
 <div id="container" style="border-radius: 2.5px;height: 100%; width: 100%;">
   <div id="center-side">
-    <a href="/oda_servisi">
-      <button id="center-btn">
-        <img style="width: 100px; height: 100px;" src="/gui_static/oda servisi.png"/>
-      </button>
-    </a>
-    <a href="/odalar">
-      <button id="center-btn">
-        <img style="width: 100px; height: 100px;" src="/gui_static/odalar.png"/>
-      </button>
-    </a>
-
-    <a href="/profile">
-      <button id="center-btn">
-        <img style="width: 100px; height: 100px;" src="/gui_static/bilgiler.png"/>
-      </button>
-    </a>
-</div>
+    {% if len(oda_bilgisi) > 0%}
+        {% for i in range(len(oda_bigisi))}
+        <button id="center-btn" style="color:white; background: crimson;">
+            {{ oda_bigisi[i] }}. ODA
+        </button>
+        {% endfor %}
+    {% else %}
+        <center style="color:white; font-size: 60px;">
+            HENÜZ ODA AYIRTMAMIŞSINIZ...
+        </center>
+    {% endif %}
+  </div>
 </div>
 </body>
 </html>

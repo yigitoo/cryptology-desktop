@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{{ url_for('static',filename='logo.png') }}">
+    <title>{{ user.isim + " " +user.soyisim }} | Kodların Seyyahı Otel</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/gui_static/css/profile.css" />
+    <link rel="stylesheet" href="/gui_static/css/ui.css" />
+  </head>
+  <body id="background">
+    <div class="header__wrapper">
+      <header style="z-index: -1 !important; " id="bg">
+        <a href='/' style="background-color: transparent;">
+          <img src="/gui_static/go_back.svg" alt="Go back"/>
+        </a>
+      </header>
+      <div class="cols__container" style="background-color: crimson !important;" id="bg">
+        <div class="left__col">
+          <div class="img__container" style="margin-left: -15%;">
+            <img style="border-radius: 0%; z-index:2;" src="https://api.dicebear.com/6.x/bottts/svg?seed={{user._id}}.svg" alt="{{user.kullanici_adi}}" />
+          </div>
+          <h2>Kullanıcı Adı: {{ user.kullanici_adi }}<span style="margin-right: 100px;"></span></h2>
+          <br>
+          <p>
+            <a style="border: 1px solid black; filter: drop-shadow(0 0 0.75em crimson); color:white !important; background-color: crimson; cursor: pointer; padding: 10px; margin-left: -100px; border-radius: 4%; border: 1px solid black;" href="mailto:{{user.email}}">
+                {{ user.email }}
+            </a>
+          </p>
+          <br><br>
+          <div class="content" style="font-size: 1.12rem; padding: 1.5rem; padding-left: 5em; padding-right: 10rem;border: 1px solid black; filter: drop-shadow(0 0 0.75em crimson); position: absolute; left: 155% !important; top: -16.5%; text-align:start;">
+            <b>
+                Ad: {{ user.isim }}
+            </b><br>
+            <b>
+                Soyad: {{ user.soyisim }}
+            </b><br>
+            <b>
+                T.C. Kimlik No: {{ user.tc_kimlik_no }}
+            </b><br>
+            <b>
+                Yaş: {{ user.yas }}
+            </b><br>
+            <b>
+                Telefon Numarası: {{ user.telefon_numarasi }}
+            </b><br>
+            <b>
+                Oda No: {{ user.oda_nolar }}
+            </b><br>
+            <b>
+                Üye ID: {{ user._id }}
+            </b><br>
+            <b>
+                Kullanıcı Tipi: {% if user.admin %} Admin/Yönetici {% else %} Ziyaretçi/Konuk {% endif %}
+            </b><br>
+
+          </div>
+        </div>
+      </div>
+    </div>
+<script>
+    function createHex() {
+   var hexCode1 = "";
+   var hexValues1 = "0123456789abcdef";
+
+   for ( var i = 0; i < 6; i++ ) {
+     hexCode1 += hexValues1.charAt(Math.floor(Math.random() * hexValues1.length));
+   }
+   return hexCode1;
+ }
+
+ function generate() {
+
+   var deg = Math.floor(Math.random() *360);
+
+   var gradient = "linear-gradient(" + deg + "deg, " + "#" + createHex() + ", " + "#" + createHex() +")";
+
+   document.getElementById("bg").style.background = gradient;  
+ }
+ document.onload = generate();
+
+ const background = document.querySelector('#background');
+ background.backgroundImage = "url('/gui_static/BG.jpeg')";
+</script>
+  </body>
+</html>
