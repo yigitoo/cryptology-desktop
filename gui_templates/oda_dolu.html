@@ -11,13 +11,13 @@
     <link rel="stylesheet" href="/gui_static/css/index.css">
     <link rel="stylesheet" href="/gui_static/css/ui.css">
     <link rel="icon" href="{{ url_for('static',filename='logo.png') }}">
-    <title>Kodların Seyyahı Otel ~ Ana Sayfa</title>
+    <title>Kodların Seyyahı Otel ~ Oda Ayırtma</title>
     </head>
 <body>
 <nav class="navbar navbar-dark justify-content-between">
-    <a href="/" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+    <a href="/odalar" style="position: absolute; margin-top: 70px; padding-right: 15%;">
       <button style="cursor: pointer; padding: 10px; border: 1px solid white; color:white; background-color: #c51b12; border-radius: 2.5%; filter: drop-shadow(0 0 0.75rem crimson);">
-        <img src="/gui_static/go_back.svg" alt="Go back"/>
+          <img src="/gui_static/go_back.svg" alt="Go back"/>
       </button>
     </a>
     <a href="/profile" style="position: absolute; margin-top: 70px; padding-right: 15%;">
@@ -26,31 +26,17 @@
       </span>
     </a>
 </nav>
-<div id="container" style="border-radius: 2.5px;height: 100%; width: 100%;">
+<div id="container" style="position: absolute; left: 5%; top: -2.5%; border-radius: 2.5px;height: 100%; width: 100%;">
   <div id="center-side">
-    <form action="/oda_ayirt" method="POST" name="oda_ayirma">
-      <input style="padding: 10px; border-radius: 20px; background-color: crimson; border: 1px solid white; color:white; filter: drop-shadow(0 0 0.75em crimson);" 
-        id="oda_no" name="oda_no" type="text" placeholder="Oda numarası arat..." translate="no" required="" autocomplete="off"/>
-      <a>
-        <button style="border-radius: 20px; padding: 10px; color:white; border: 1px solid crimson; background-color: crimson; filter: drop-shadow(0 0 0.75em crimson);" type="submit">
-          ODA ARAT
-        </button>
-      </a>
-    </form>
-  </div>
-  <div id="center-side" style="position: absolute; left: 50%;">
-    {% if oda_sayisi > 0 %}
-        {% for oda in oda_bilgileri %}
-        <button id="center-btn" style="margin-inline: 20px; color:white; background: crimson;">
-            {{ oda }}. ODA
-        </button>
-        {% endfor %}
-    {% else %}
-        <center style="position:absolute; left: -50%; color:white; font-size: 60px;">
-            HENÜZ ODA AYIRTMAMIŞSINIZ...
+        <center style="color:white; font-size: 60px;">
+            BU ODA AYIRTILMIŞTIR...
         </center>
-    {% endif %}
   </div>
 </div>
+<script>
+setTimeout(() => {
+    window.location.href = '/odalar'
+}, 2000);
+</script>
 </body>
 </html>

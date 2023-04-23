@@ -136,12 +136,45 @@ def oda_islemleri():
                 reservations.append(reservation)
 
             oda_bilgileri = []
-            print(reservations)
-            for index in range(0, len(reservations)):
-                oda_bilgileri[index] = reservations[index]['oda_no']
+            for index in range(len(reservations)):
+                oda_bilgileri.append(reservations[index]['oda_no'])
+        oda_sayisi = len(oda_bilgileri)
+        return render_template('odalar.html', oda_sayisi = oda_sayisi, oda_bilgileri = oda_bilgileri, user=session_user)
 
-        return render_template('odalar.html', oda_bilgileri = oda_bilgileri)
-@app.route('/profile', methods=["GET", "POST"])
+@app.route('/oda_ayirt', methods=["GET", "POST"])
+def oda_ayirt():
+    oda_no = request.form['oda_no']
+    oda_no = int(oda_no)
+    session_user = get_session_user()
+    if not (oda_no < 51 and oda_no > 0):
+        return render_template('oda_degeri_yanlis.html', user=session_user)
+
+    result = database_reservation.find_one({
+        'oda_no': oda_no,
+        'otel_ismi': 'Kodların Seyyahı'
+    })
+    if result in not_exist_situtations:
+        return render_template('oda_ayirt.html', oda_no=oda_no, user=session_user)
+    else:
+        return render_template('oda_dolu.html', user=session_user)
+
+@app.route('/oda_satin_al', methods=["POST", "GET"])
+def oda_satin_al():
+    oda_no = request.form['oda_no']
+    oda_no = int(oda_no)
+    session_user = get_session_user()
+    otel_name = "Kodların Seyyahı"
+    random_id = str(uuid.uuid4())
+    database_reservation.insert_one({
+        '_id': random_id,
+        'whoose': session_user['_id'],
+        'baslangic_tarihi': '26.04.2023',
+        'bitis_tarihi': '02.05.2023',
+        'oda_no': oda_no,
+        'otel_ismi': otel_name,
+    })
+    return redirect('/profile')
+@app.route('/profile')
 def profile():
     session_user = get_session_user()
     if session_user == None:
@@ -151,9 +184,7 @@ def profile():
     })
     oda_nolar_list = []
     for data in rezervasyonlari:
-        print(data)
         oda_nolar_list.append(data['oda_no'])
-    print(oda_nolar_list)    
     
     oda_no_string = ""
     for oda_no in range(len(oda_nolar_list)):
@@ -161,8 +192,7 @@ def profile():
             oda_no_string += f"{oda_nolar_list[oda_no]} nolu odalar."
             break
         oda_no_string += f"{oda_nolar_list[oda_no]}, "
-        print(oda_no_string)
-    
+        
     session_user['oda_nolar'] = oda_no_string
     return render_template('profile.html', user = session_user)
 
@@ -211,7 +241,6 @@ def index():
         return redirect('/giris')
     
     session_user = get_session_user() 
-    print(session_user)
     if session_user["admin"] == True:
         elist = open('db/maillist.csv','r').read().replace(' ','\n')
         return render_template('admin_index.html', elist=elist)
@@ -268,7 +297,6 @@ def api_ce(data):
         
         database_reservation.insert_one({
             '_id': random_id,
-            'case_id': random_id,
             'whoose': session_user['_id'],
             'baslangic_tarihi': baslangic_tarihi,
             'bitis_tarihi': bitis_tarihi,
