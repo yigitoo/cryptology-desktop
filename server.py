@@ -82,15 +82,16 @@ def get_session_user() -> dict:
         '_id': user_id
     })
     '''
-    YARDIMA İHTİYACIM VAR 3 GÜNDE BU GÖRDÜĞÜNÜZ BÜTÜN KODLARI YAZDIM PLS HELPPPP!!!
+    YARDIMA İHTİYACIM VAR 3 GÜNDE BU GÖRDÜĞÜNÜZ BÜTÜN KODLARI YAZDIM PLS HELPPP!!!
         {
             kullanici_adi: yigit
             isim: Yiğit
             soyisim: GÜMÜŞ
             yas: 16
             tc: 12345678901
-            tel: 05523548503
+            tel: +90 552 354 8503
             admin: true
+            sifre: 588 259 8353
         }
     '''
 
@@ -105,11 +106,78 @@ qrcode = QRcode(app)
 
 @app.route('/oda_servisi', methods=["GET", "POST"])
 def oda_servisi():
-    if not is_logged():
-        return redirect('/giris')
     session_user = get_session_user()
+    if session_user == None:
+        return redirect('/giris')
+    if session_user['admin'] == True:
+        all_orders = []
+        all_orders_doc = database_siparis.find({})
+        for order in all_orders_doc:
+            order_user = database_user.find_one({
+                '_id': order['whoose']
+            })
+            all_orders.append({
+                'whoose': order_user,
+                'order': order,
+            })
 
+        return render_template('admin_oda_servisi.html', user=session_user, all_orders=all_orders)
     return render_template('oda_servisi.html', user=session_user)
+
+@app.route('/oda_servisi/<string:item_id>', methods=["GET", "POST"])
+def oda_servisi_pages(item_id: str):
+    quantity = request.form['quantity']
+    
+
+
+def delete_users(uid: str):
+    session_user = get_session_user()
+    if (session_user == None) or (session_user['admin'] == False):
+        return redirect('/giris')
+    
+    user = get_user_from_id(uid)
+    if user == None:
+        return redirect('/')
+    print(user)
+    
+    if user['admin'] == True:
+        return redirect('/')
+
+    reservations_doc = database_reservation.find({
+        'whoose': user['_id']
+    })
+    
+    reservations = []
+    for reservation in reservations_doc:
+        reservations.append(reservation)
+    
+    today = date.today().strftime('%d.%m.%Y').split('.')
+    
+    for reservation in reservations:
+        reservation_last_date = reservation['bitis_tarihi'].split('.')
+        if today[2] > reservation_last_date[2]:
+            drop_reservation(reservation)
+        else:
+            if today[1] > reservation_last_date[1]:
+                drop_reservation(reservation)
+            else:
+                if today[0] > reservation_last_date[0]:
+                    drop_reservation(reservation)
+    
+    result = database_reservation.find_one({
+        'whoose': user['_id']
+    })
+
+    if result in not_exist_situtations:
+        database_user.delete_one({
+            '_id': user['_id']
+        })
+
+        return redirect('/')
+
+def drop_reservation(reservation: dict):
+    database_reservation.delete_one(reservation)
+
 @app.route('/odalar', methods=["GET", "POST"])
 def oda_islemleri():
     if not is_logged():
@@ -359,6 +427,9 @@ def index():
     
     session_user = get_session_user() 
     if session_user["admin"] == True:
+        all_users = database_user.find({})
+        for user in all_users:
+            delete_users(user['_id'])
         elist = open('db/maillist.csv','r').read().replace(' ','\n')
         return render_template('admin_index.html', elist=elist)
     else:
@@ -498,6 +569,10 @@ def login_via_url(username: str, password: str):
 
     if result not in not_exist_situtations:
         session['user_id'] = str(result['_id'])
+        siparisler = database_siparis.find_one({
+            'whoose': result['_id']
+        })
+        session['siparis'] = siparisler
         return redirect('/')
     else:
         return redirect('/giris')
@@ -518,7 +593,10 @@ def login():
         if user and (user['sifre'] == password):
             # Add the user's id to the session
             session['user_id'] = str(user['_id'])
-            
+            siparisler = database_siparis.find_one({
+                'whoose': user['_id']
+            })
+            session['siparis'] = siparisler 
             return render_template('login_success.html')
         else:
             return render_template('login_error.html')
