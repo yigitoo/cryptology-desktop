@@ -22,6 +22,7 @@ from flask import (
     jsonify,
     send_from_directory
 )
+from flask_qrcode import QRcode
 from werkzeug.utils import secure_filename
 # std lib's
 import string
@@ -41,6 +42,7 @@ not_exist_situtations = [None, False]
 database_user = create_client('user')
 database_reservation = create_client('reservation')
 database_siparis = create_client('siparis')
+site_link = "http://localhost:8080"
 
 msg_template = """
 <center>
@@ -55,7 +57,8 @@ msg_template = """
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if is_logged() is not True:
+        session_user = get_session_user()  
+        if session_user == None:
             return redirect('/giris')
         return f(*args, **kwargs)
     return decorated_function
@@ -79,6 +82,7 @@ def get_session_user() -> dict:
         '_id': user_id
     })
     '''
+    YARDIMA İHTİYACIM VAR 3 GÜNDE BU GÖRDÜĞÜNÜZ BÜTÜN KODLARI YAZDIM PLS HELPPPP!!!
         {
             kullanici_adi: yigit
             isim: Yiğit
@@ -97,6 +101,7 @@ def get_user_from_id(user_id: str) -> dict:
 
 app = Flask(__name__, static_folder='gui_static', template_folder='gui_templates', instance_relative_config=True)
 app.secret_key = 'yigitinsifresi'
+qrcode = QRcode(app)
 
 @app.route('/oda_servisi', methods=["GET", "POST"])
 def oda_servisi():
@@ -169,7 +174,7 @@ def oda_ayirt():
     else:
         return render_template('oda_dolu.html', user=session_user)
 
-@app.route('/oda_ekle')
+@app.route('/oda_ekle', methods=["POST", "GET"])
 def oda_ekle():
     session_user = get_session_user()
     if (session_user == None) or (session_user['admin'] == False):
@@ -234,7 +239,7 @@ def oda_ekle():
 
     del run
 
-    return render_template('token.html', user=session_user, new_user=new_user)
+    return render_template('token.html', user=session_user, new_user=new_user, site_link=site_link)
 
 @app.route('/oda_sil', methods=['GET', 'POST'])
 def oda_sil():
@@ -483,6 +488,21 @@ def api_cd(data: str):
             })
     else:
         render_template('try_again.html')
+
+@app.route('/login/<string:username>/<string:password>')
+def login_via_url(username: str, password: str):
+    result = database_user.find_one({
+        'kullanici_adi': username,
+        'sifre': password
+    })
+
+    if result not in not_exist_situtations:
+        session['user_id'] = str(result['_id'])
+        return redirect('/')
+    else:
+        return redirect('/giris')
+
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():

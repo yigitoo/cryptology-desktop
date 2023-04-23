@@ -26,35 +26,26 @@
       </span>
     </a>
 </nav>
-<div id="container" style="border-radius: 20px; height: 100%; width: 80%;">
+<div id="container" style="position: absolute; top: 20%; left: 10.5%; border-radius: 20px; height: 100%; width: 80%;">
     <span style="margin-right: 50px;">~ ~</span>
     <center style="color: white; ">
         <h1>
-            <u>
-                KODLARIN SEYYAHI OTEL ODA BİLGİSİ
-            </u>
+            Merhaba {{ new_user['isim'] + ' ' + new_user['soyisim'] }}<br>
+            Kullanıcı adın: {{new_user['kullanici_adi']}}
+            <br><b>
+                Yeni hesabına direkt erişmek için telefonundan qr kodu taratman yeterli<br>
+                ya da ellerinle hesabı <a href="/giris">girebilirsin</a>
+            </b>
+            <br><br>
+            <img src="{{qrcode('{}/login/{}/{}'.format(site_link, new_user['kullanici_adi'], new_user['sifre']))}}"/>
+            <br><br>
+            <b>
+                ŞİFREN: {{ new_user['sifre'] }}
+            </b> 
         </h1>
+        
     </center>
-    <div style="position: absolute; left: 10px; top: 100px;">
-    {% for oda in oda_bilgileri %}
-        <button id="center-btn" style="margin-top: 10px; filter: drop-shadow(0 0 0.75em rgb(12, 12, 196)); margin-inline: 20px; color:white; background: rgb(12, 12, 196);;">
-            {{ oda['oda_no'] }}. ODA<br>
-            
-            {% if oda['is_full'] == False %}
-            <span style="color: greenyellow;">
-                ODA BOŞ
-            </span>
-            {% else %}
-            <span style="border-radius: 20px; margin-top: 5px; padding: 5px; border: 1px solid crimson; filter: drop-shadow(0 0 .75em crimson); background-color: crimson; color:white;">
-                <u>
-                    Sahibi: {{ oda['whoose'] }}
-                </u>
-            </span>
-            {% endif %}
-            
-        </button>
-    {% endfor %}
-    </div>
+    
 </div>
 </body>
 </html>
