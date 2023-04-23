@@ -1,88 +1,90 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Ana Sayfa</title>
     <link rel="stylesheet" href='/gui_static/css/ui.css'>
     <link rel="stylesheet" href="/gui_static/css/form.css" />
 </head>
-<body>
-    <div id="righter-side">
-        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/mini-bar.png"/></button>
 
-        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/oda servisi.png"/></button>
-
-        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/odalar.png"/></button>
-
-        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/ziyaretçiler.png"/></button>
-
-        <button id="righter-btn"><img style="width: 45px; height: 45px;" src="/gui_static/bilgiler.png"/></button>
-
+<body style="overflow: hidden;">
+    <div id="righter-side" style="width: 100%;">
+        <a href="/oda_servisi_admin">
+            <button id="center-btn" style="margin-right: 10px;">
+                <img style="width: 45px; height: 45px;" src="/gui_static/oda servisi.png" />
+            </button>    
+        </a>
+        <a href="/odalar">
+            <button id="center-btn" style="margin-right: 10px;">
+                <img style="width: 45px; height: 45px;" src="/gui_static/odalar.png" />
+            </button>    
+        </a>
+        
+        <a href="/profile">
+            <button id="center-btn">
+                <img style="width: 45px; height: 45px;" src="/gui_static/bilgiler.png" />
+            </button>
+        </a>
     </div>
-    <div class="login-box">
-        <h2>Kodların Seyyahı Otel Kullanıcı Yönetim Sistemi</h2>
-        <br>
-        <form action="/saveroom" method="POST" autocomplete="off">
+    <div class="login-box" style="top: 430px; color:white; padding-top: 10px; padding-bottom: 10px;">
+        <h3>Kodların Seyyahı Otel Kullanıcı Yönetim Sistemi</h3><br>
+        <form action="/oda_ekle" method="POST" autocomplete="off">
             <div class="user-box">
                 <input type="email" name="email" placeholder="Misafir E-mail" required="">
             </div>
             <div class="user-box">
-                <input type='text' class='right-side' class='text-input' placeholder="Misafir TC" />
+                <input type='text' name="tc_kimlik_no" class='right-side text-input' placeholder="Misafir TC" />
             </div>
             <div class="user-box">
-                <input type='text' class='cdb button' placeholder="Kişi sayısı" />
+                <input type='text' name="isim" class='right-side ti' placeholder="İsim" />
             </div>
             <div class="user-box">
-                <input type='text' class='right-side' class='ti' placeholder="Oda no giriniz" />
+                <input type='text' name="soyisim" class='right-side ti' placeholder="Soyisim" />
             </div>
             <div class="user-box">
-                <input type="password" name="password" placeholder="Yatak Sayısı" required="">
+                <input type='text' name="kullanici_adi" class='right-side ti' placeholder="Kullanıcı Adı" />
             </div>
-            <a href="#">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="user-box">
+                <input type="text" name="yas" placeholder="Yaş" required="">
+            </div>
+            <div class="user-box">
+                <input type="text" name="telefon_numarasi" pattern="+90 [0-9]{3} [0-9]{3} [0-9]{4}" placeholder="Telefon Numarası Örn: +90 552 354 85 03" required="">
+            </div>
+            <a href="#yareni_seviyom">
                 <input type="submit" value="Oda Kaydı Oluştur!" />
             </a>
-            |
-            <a href="#">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <input type="submit" value="Oda Kaydı Sil!" />
-            </a>
+            <span>
+                <a href="/oda_sil">
+                    <button style="background-color: transparent; border:none;">Oda Kaydı Sil</button>
+                </a>
+            </span>
         </form>
     </div>
-
-
 
     <div class="decrypt-box">
         <h2 style="color: white;"><u>Kodların Seyyahı Otel</u> Kullanıcı Bilgileri Yönetim Sistemi</h2>
         <br>
-        <form action="/saveroom" method="POST" autocomplete="off">
+        <form action="/goto_user" method="POST">
             <div class="user-box">
-                <input class="dmail" type="email" name="email" placeholder="Misafir E-mail" required="">
+                <input style="width: 92.80%; border: 1px solid white; border-radius: 20px; padding: 10px; filter:drop-shadow(0 0 .75em white); background-color: white;" class="email" type="text" name="email" placeholder="MİSAFİR E-MAİL" required="">
             </div>
             <a href="#">
-                <input style="height:45px; width:120px; border-radius: 9.5px;" type="submit" value="Bilgileri Deşifrele!" />
+                <input style="height:45px; width:120px; border-radius: 20px;" type="submit"
+                    value="Bilgileri Deşifrele!" />
             </a>
 
             </a>
         </form>
     </div>
 
-    
-
-    <div class="emaillist" style="padding: -10%; overflow: scroll; margin-left: 42rem; display: block; width: 400px; height: 910px;">
+    <div class="emaillist"
+        style="filter:drop-shadow(0 0 .75em rgb(0, 0, 255)); padding: -10%; overflow: scroll; margin-left: 42rem; display: block; width: 400px; height: 910px;">
         <h1><u>Kullanıcılar:</u></h1>
         <h1 id='elsst' style="text-align: center;">
             {{ elist }}
         </h1>
     </div>
 
-    <div class="logout-btn">
-        <a></a>
-    </div>
+<script></script>
 </body>
 </html>

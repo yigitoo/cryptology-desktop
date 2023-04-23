@@ -1,7 +1,6 @@
 body {
     background-image: url('/gui_static/BG.jpeg') !important;
     background-size: cover !important;
-    background-repeat: no-repeat !important;
 }
 #elsst {
     font-size: 15px;

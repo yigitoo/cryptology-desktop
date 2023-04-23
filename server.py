@@ -24,6 +24,8 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 # std lib's
+import string
+from datetime import date
 import time
 import uuid
 import urllib.parse
@@ -108,24 +110,33 @@ def oda_islemleri():
     if not is_logged():
         return redirect('/giris')
     session_user = get_session_user()
-
+    
     if session_user['admin'] == True:
-        reservations = database_reservation.find({})
-        
-        is_full, whoose = [], []
-        
-        for _ in range(50):
-            is_full.append(False)
-            whoose.append(False)
-        for reservation in reservations:
-            is_full[reservation['oda_no'] - 1] = True
-            whoose[reservation['oda_no'] - 1] = reservation['whoose']
-
+        reservations_doc = database_reservation.find({})
+        whoose = []
         oda_bilgileri = []
+        reservations = []
+        for sayi in range(1, 51):
+            oda_bilgileri.append({
+                "oda_no": sayi,
+                "is_full": False,
+                "whoose": "OWNLESS"
+            })
+        for reservation in reservations_doc:
+            reservations.append(reservation)
+        
+        for oda in reservations:
+            query = database_user.find_one({
+                '_id': oda['whoose']
+            })
 
-        for i in range(50):
-            oda_bilgileri[i] = [is_full, whoose]
-        return render_template('admin_odalar.html', oda_bilgileri = oda_bilgileri)
+            oda_bilgileri[oda['oda_no'] - 1] = {
+                "oda_no": oda['oda_no'],
+                "whoose": query['email'],
+                "is_full": True
+            }
+
+        return render_template('admin_odalar.html', oda_bilgileri = oda_bilgileri, user=session_user)
     else:
         reservations_cursor = database_reservation.find({
             "whoose": session_user['_id']
@@ -158,6 +169,80 @@ def oda_ayirt():
     else:
         return render_template('oda_dolu.html', user=session_user)
 
+@app.route('/oda_ekle')
+def oda_ekle():
+    session_user = get_session_user()
+    if (session_user == None) or (session_user['admin'] == False):
+        return redirect('/giris')
+    
+    email = request.form['email']
+    tc_kimlik_no = request.form['tc_kimlik_no']
+    isim = request.form['isim']
+    soyisim = request.form['soyisim']
+    kullanici_adi = request.form['kullanici_adi']
+    yas = request.form['yas']
+    telefon_numarasi = request.form['telefon_numarasi']
+    random_id = str(uuid.uuid4())
+    
+    chars = string.ascii_letters + string.digits + string.punctuation
+    sifre = ""
+    for _ in range(8):
+        sifre += chars[random.randint(0, len(chars) - 1)]
+
+    database_user.insert_one({
+        '_id': random_id,
+        'email': email,
+        'tc_kimlik_no': tc_kimlik_no,
+        'isim': isim,
+        'soyisim': soyisim,
+        'kullanici_adi': kullanici_adi,
+        'yas': yas,
+        'telefon_numarasi': telefon_numarasi,
+        'admin': False,
+        'sifre': sifre
+    })
+    new_user = {
+        '_id': random_id,
+        'email': email,
+        'tc_kimlik_no': tc_kimlik_no,
+        'isim': isim,
+        'soyisim': soyisim,
+        'kullanici_adi': kullanici_adi,
+        'yas': yas,
+        'telefon_numarasi': telefon_numarasi,
+        'admin': False,
+        'sifre': sifre
+    }
+    run = True
+    otel_name = "Kodların Seyyahı"
+    while run:
+        random_number = random.randint(1, 50)
+        result = database_reservation.find_one({
+            'oda_no': random_number
+        })
+        
+        if result in not_exist_situtations:
+            database_reservation.insert_one({
+                '_id': str(uuid.uuid4()),
+                'whoose': random_id,
+                'baslangic_tarihi': date.today().strftime('%d.%m.%Y'),
+                'bitis_tarihi': '02.05.2023',
+                'oda_no': random.randint(1, 50),
+                'otel_ismi': otel_name,
+            })
+            run = False
+
+    del run
+
+    return render_template('token.html', user=session_user, new_user=new_user)
+
+@app.route('/oda_sil', methods=['GET', 'POST'])
+def oda_sil():
+    session_user = get_session_user()
+    if (session_user is  None) or (session_user['admin'] == False):
+        return redirect('/giris')
+    return render_template('oda_sil.html', user=session_user)
+
 @app.route('/oda_satin_al', methods=["POST", "GET"])
 def oda_satin_al():
     oda_no = request.form['oda_no']
@@ -174,6 +259,29 @@ def oda_satin_al():
         'otel_ismi': otel_name,
     })
     return redirect('/profile')
+
+@app.route('/goto_user', methods=["POST"])
+def goto_user():
+    email = request.form['email']
+    user = database_user.find_one({
+        'email': email
+    })
+
+    return redirect(f"/profile/{user['_id']}")
+
+
+@app.route('/profile/<string:uid>', methods=["GET"])
+def profile_via_id(uid: str):
+    session_user = get_session_user()
+    if session_user == None:
+        return redirect('/giris')
+    
+    if session_user['admin'] == True:
+        user = get_user_from_id(uid)
+        return render_template('profile.html', user = user)
+    else:
+        return render_template('/profile')
+
 @app.route('/profile')
 def profile():
     session_user = get_session_user()
@@ -229,8 +337,12 @@ def islemler():
 
 @app.route('/giris')
 def giris():
-    return render_template('login.html')
-
+    session_user = get_session_user()
+    if session_user == None:
+        return render_template('login.html')
+    else:
+        return redirect('/')
+    
 @app.route('/anasayfa/')
 @app.route('/anasayfa')
 @app.route('/index/')

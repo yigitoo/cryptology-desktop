@@ -49,12 +49,14 @@
             <b>
                 Telefon Numarası: {{ user.telefon_numarasi }}
             </b><br>
+            {% if user['admin'] == False %}
             <b>
                 Oda No: {{ user.oda_nolar }}
             </b><br>
             <b>
                 Üye ID: {{ user._id }}
             </b><br>
+            {% endif %}
             <b>
                 Kullanıcı Tipi: {% if user.admin %} Admin/Yönetici {% else %} Ziyaretçi/Konuk {% endif %}
             </b><br>
