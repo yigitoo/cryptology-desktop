@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahip olduğunuz odalar ~ Kodların Seyyahı Otel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name=application-name content="GalBul">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="/gui_static/css/index.css">
+    <link rel="stylesheet" href="/gui_static/css/ui.css">
+    <link rel="icon" href="{{ url_for('static',filename='logo.png') }}">
+    <title>Kodların Seyyahı Otel ~ Ana Sayfa</title>
+    </head>
+<body>
+<nav class="navbar navbar-dark justify-content-between">
+    <a href="/" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+      <button style="cursor: pointer; padding: 10px; border: 1px solid white; color:white; background-color: #c51b12; border-radius: 2.5%; filter: drop-shadow(0 0 0.75rem crimson);">
+        <img src="/gui_static/go_back.svg" alt="Go back"/>
+      </button>
+    </a>
+    <a href="/profile" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+      <span>
+        <img src="https://avatars.dicebear.com/api/micah/{{user._id}}.svg" style="display:inline-block; margin-left: 5%; position: fixed; top: 10px; right: 15px; width:2.5rem; height:2.5rem; background-color: #0c25e4; border: 1px solid white; border-radius: 50%;" alt="{{user.kullanici_adi}}" />
+      </span>
+    </a>
+</nav>
+<div id="container" style="border-radius: 20px; height: 100%; width: 80%;">
+    <span style="margin-right: 50px;">~ ~</span>
+    <center style="color: white; ">
+        <h1>
+            <u>
+                KODLARIN SEYYAHI OTEL ODA SERVİSİ BEKLEYEN SİPARİŞ BİLGİSİ
+            </u>
+        </h1>
+    </center>
+    <div style="position: absolute; left: 10px; top: 100px;">
+    {% if len_of_order > 0%}
+
+        {% for order in all_orders %}
+            <div id="center-btn" style="text-align: start !important; margin-top: 10px; filter: drop-shadow(0 0 0.75em rgb(12, 12, 196)); margin-inline: 20px; color:white; background: rgb(12, 12, 196);;">
+                {{ order['room_no'] }}. ODA:<br>
+                <ul style="position: relative; left: -20px;">
+                {% for order_things, sayisi in order['order'].items() %}
+                    <li>{{sayisi}} tane 
+                        {% if "_" in order_things %}
+                            {{order_things.split('_')[0] + ' ' + order_things.split('_')[1]}}
+                        {% else %}
+                            {{order_things}}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+                <br>
+                <span style="border-radius: 20px; margin-top: 5px; padding: 5px; border: 1px solid crimson; filter: drop-shadow(0 0 .75em crimson); background-color: crimson; color:white;">
+                    <a href='/goto_user/{{order["whoose"]}}' style="color:white;">
+                        <u>
+                            Sahibi: {{ order['whoose'] }}
+                        </u>
+                    </a>
+                </span>
+                <br><br>
+                <span style="border-radius: 20px; position: relative; left: 50px; text-align:center; margin-top: 5px; padding: 5px; border: 1px solid rgb(110, 184, 0); filter: drop-shadow(0 0 .75em rgb(110, 184, 0)); background-color: rgb(110, 184, 0); color:white;">
+                    <a hreF='/gonder/{{order["whoose"]}}' style="text-align:center; text-decoration:none; color: white;">
+                        <span style="text-align:center; color: white;">
+                            Siparişi gönder!
+                        </span>
+                    </a>
+                </span>
+            </div>    
+        {% endfor %}
+        
+    {% else %}
+        <center>
+            HENÜZ BEKLEYEN SİPARİŞ YOK!
+        </center>
+    {% endif %}
+    </div>
+</div>
+</body>
+</html>

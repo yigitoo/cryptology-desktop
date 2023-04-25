@@ -11,11 +11,18 @@
     </head>
 <body>
 <nav class="navbar navbar-dark justify-content-between">
-    <a href="/logout" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+    <a href="/" style="position: absolute; margin-top: 70px; padding-right: 15%;">
       <button style="cursor: pointer; padding: 10px; border: 1px solid white; color:white; background-color: #c51b12; border-radius: 2.5%; filter: drop-shadow(0 0 0.75rem crimson);">
-        Çıkış yap
+        <img src="/gui_static/go_back.svg">
       </button>
     </a>
+    <span style="font-size: 30px; position: relative; left: 38%;color:white;">
+      HANGİ ODAYA GÖNDERELİM
+      <br>
+      <select>
+        
+      </select>
+    </span>
     <a href="/profile" style="position: absolute; margin-top: 70px; padding-right: 15%;">
       <span>
         <img src="https://avatars.dicebear.com/api/micah/{{user._id}}.svg" style="display:inline-block; margin-left: 5%; position: fixed; top: 10px; right: 15px; width:2.5rem; height:2.5rem; background-color: #0c25e4; border: 1px solid white; border-radius: 50%;" alt="{{user.kullanici_adi}}" />
@@ -23,24 +30,29 @@
     </a>
 </nav>
 <div id="container" style="border-radius: 2.5px;height: 100%; width: 100%;">
-  <div id="center-side">
-    <a href="/">
-      <button id="center-btn">
-        <img style="width: 100px; height: 100px;" src="/gui_static/oda servisi.png"/>
-      </button>
-    </a>
-    <a href="/odalar">
-      <button id="center-btn">
-        <img style="width: 100px; height: 100px;" src="/gui_static/odalar.png"/>
-      </button>
-    </a>
-
-    <a href="/profile">
-      <button id="center-btn">
-        <img style="width: 100px; height: 100px;" src="/gui_static/bilgiler.png"/>
-      </button>
-    </a>
-</div>
+  <div id="center-side" style="position: absolute; left: 15%; top: 40%; display: flex; justify-content: center; align-items: center;">
+      {% for item_name in item_list %}
+          <a href="/oda_servisi/{{item_name}}">
+            <div class="item" 
+              style="margin-right: 20px; padding: 10px; margin-top: .8rem; background-color: white; border: 1px solid crimson; border-radius: 50px; filter: drop-shadow(0 0 .75em crimson);">
+              <span style="text-align:center; border: 1px solid transparent; filter:drop-shadow(0 0 .75em blue);">
+                <img src="/gui_static/oda_servisi/{{ item_name }}.jpeg"/>
+              </span>
+              <br><br>
+              <div style="padding: 10px; text-align:center;">
+                <b>
+                  {% if "_" in item_name %}
+                    {{ item_name.split('_')[0] + ' ' + item_name.split('_')[1]}}
+                  {% else %}
+                    {{ item_name }}
+                  {% endif %}
+                </b>
+              </div>
+            </div>
+          </a>
+      
+      {% endfor %}
+  </div>
 </div>
 </body>
 </html>

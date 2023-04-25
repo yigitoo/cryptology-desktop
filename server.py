@@ -37,13 +37,15 @@ from functools import wraps
 
 ALLOWED_EXTENSIONS = ['mp4', 'key']
 ERR_CODES = [400, 401, 403, 404, 500, 502, 503, 504]
-not_exist_situtations = [None, False]
+non_exist_situations = [None, False]
 
 database_user = create_client('user')
 database_reservation = create_client('reservation')
 database_siparis = create_client('siparis')
+database_roomswitch = create_client('room_switch')
 site_link = "http://localhost:8080"
 
+item_list = ['BURGER', 'LAZANYA', 'OMLET', 'SERPME_KAHVALTI', 'PORTAKAL_SUYU', 'AYRAN', 'SU']
 msg_template = """
 <center>
     <h1 style="font-size:60px;">
@@ -104,6 +106,24 @@ app = Flask(__name__, static_folder='gui_static', template_folder='gui_templates
 app.secret_key = 'yigitinsifresi'
 qrcode = QRcode(app)
 
+@app.route('/gonder/<string:email>', methods=["GET"])
+def gonder(email: str):
+    session_user = get_session_user()
+    if (session_user == None) or (session_user['admin'] == False):
+        return redirect('/giris')
+    user = database_user.find_one({
+        'email': email
+    })
+    siparis = database_siparis.find_one({
+        '_id': user['_id']
+    })
+    if siparis not in non_exist_situations:
+        database_siparis.delete_one(siparis)
+        
+        return redirect('/oda_servisi')
+    else:
+        return redirect('/oda_servisi')
+
 @app.route('/oda_servisi', methods=["GET", "POST"])
 def oda_servisi():
     session_user = get_session_user()
@@ -114,20 +134,76 @@ def oda_servisi():
         all_orders_doc = database_siparis.find({})
         for order in all_orders_doc:
             order_user = database_user.find_one({
-                '_id': order['whoose']
-            })
-            all_orders.append({
-                'whoose': order_user,
-                'order': order,
+                '_id': order['_id']
             })
 
-        return render_template('admin_oda_servisi.html', user=session_user, all_orders=all_orders)
-    return render_template('oda_servisi.html', user=session_user)
+            room_no_switcher = database_roomswitch.find_one({
+                '_id': session_user['_id']
+            })
+
+            room_no = room_no_switcher['main']
+
+            del order['_id']
+            
+            all_orders.append({
+                'whoose': order_user['email'],
+                'order': order,
+                'room_no': room_no
+            })
+            
+
+        return render_template('admin_oda_servisi.html', user=session_user, all_orders=all_orders, len_of_order=len(all_orders))
+    
+    check_room = database_reservation.find_one({
+        "whoose": session_user['_id']
+    })
+    if check_room in non_exist_situations:
+        return redirect('/logout')
+    odalar = []
+    odalar_doc = database_reservation.find({
+        'whoose': session_user['_id']
+    })
+    for oda in odalar_doc:
+        odalar.append(oda['oda_no'])
+    return render_template('oda_servisi.html', odalar=odalar, user=session_user, item_list=item_list)
 
 @app.route('/oda_servisi/<string:item_id>', methods=["GET", "POST"])
 def oda_servisi_pages(item_id: str):
-    quantity = request.form['quantity']
+    if item_id not in item_list:
+        return redirect('/oda_servisi')
+    session_user = get_session_user()
+    if session_user == None:
+        return redirect('/giris')
     
+    if request.method == "POST":
+        data = request.json
+        quantity = data['quantity']
+        result = database_siparis.find_one({
+            '_id': session_user['_id']
+        })
+        if not result.get(item_id):
+
+            database_siparis.update_one({
+                '_id': session_user['_id']
+            }, {
+                '$set': {
+                    f'{item_id}': int(quantity)
+                }
+            }, upsert=True)
+
+        else:
+            database_siparis.update_one({
+                '_id': session_user['_id']
+            }, {
+                '$set': {
+                    f'{item_id}': int(quantity) + result[item_id]
+                }
+            }, upsert=True)
+
+        return redirect('/profile')
+
+    if request.method == "GET":
+        return render_template('oda_servisi_pages.html', item_id=item_id, user=session_user)   
 
 
 def delete_users(uid: str):
@@ -138,6 +214,7 @@ def delete_users(uid: str):
     user = get_user_from_id(uid)
     if user == None:
         return redirect('/')
+    
     print(user)
     
     if user['admin'] == True:
@@ -168,7 +245,7 @@ def delete_users(uid: str):
         'whoose': user['_id']
     })
 
-    if result in not_exist_situtations:
+    if result in non_exist_situations:
         database_user.delete_one({
             '_id': user['_id']
         })
@@ -215,7 +292,7 @@ def oda_islemleri():
             "whoose": session_user['_id']
         })
         reservations = []
-        if reservations_cursor not in not_exist_situtations:
+        if reservations_cursor not in non_exist_situations:
             for reservation in reservations_cursor:
                 reservations.append(reservation)
 
@@ -237,7 +314,7 @@ def oda_ayirt():
         'oda_no': oda_no,
         'otel_ismi': 'Kodların Seyyahı'
     })
-    if result in not_exist_situtations:
+    if result in non_exist_situations:
         return render_template('oda_ayirt.html', oda_no=oda_no, user=session_user)
     else:
         return render_template('oda_dolu.html', user=session_user)
@@ -261,31 +338,47 @@ def oda_ekle():
     sifre = ""
     for _ in range(8):
         sifre += chars[random.randint(0, len(chars) - 1)]
-
-    database_user.insert_one({
-        '_id': random_id,
+    is_user_exist_email = database_user.find_one({
         'email': email,
-        'tc_kimlik_no': tc_kimlik_no,
-        'isim': isim,
-        'soyisim': soyisim,
-        'kullanici_adi': kullanici_adi,
-        'yas': yas,
-        'telefon_numarasi': telefon_numarasi,
-        'admin': False,
-        'sifre': sifre
     })
-    new_user = {
-        '_id': random_id,
-        'email': email,
+
+    is_user_exist_tc_kimlik_no = database_user.find_one({
         'tc_kimlik_no': tc_kimlik_no,
-        'isim': isim,
-        'soyisim': soyisim,
+    })
+    is_user_exist_kullanici_adi = database_user.find_one({
         'kullanici_adi': kullanici_adi,
-        'yas': yas,
-        'telefon_numarasi': telefon_numarasi,
-        'admin': False,
-        'sifre': sifre
-    }
+    })
+    is_user_exist_telefon_numarasi = database_user.find_one({
+        'telefon_numarasi': telefon_numarasi
+    })
+
+    if (is_user_exist_email in non_exist_situations) and (is_user_exist_kullanici_adi in non_exist_situations) and (is_user_exist_tc_kimlik_no in non_exist_situations) and (is_user_exist_telefon_numarasi in non_exist_situations):
+        database_user.insert_one({
+            '_id': random_id,
+            'email': email,
+            'tc_kimlik_no': tc_kimlik_no,
+            'isim': isim,
+            'soyisim': soyisim,
+            'kullanici_adi': kullanici_adi,
+            'yas': yas,
+            'telefon_numarasi': telefon_numarasi,
+            'admin': False,
+            'sifre': sifre
+        })
+        new_user = {
+            '_id': random_id,
+            'email': email,
+            'tc_kimlik_no': tc_kimlik_no,
+            'isim': isim,
+            'soyisim': soyisim,
+            'kullanici_adi': kullanici_adi,
+            'yas': yas,
+            'telefon_numarasi': telefon_numarasi,
+            'admin': False,
+            'sifre': sifre
+        }
+    else:
+        return render_template('user_exist.html', user=session_user)
     run = True
     otel_name = "Kodların Seyyahı"
     while run:
@@ -294,15 +387,23 @@ def oda_ekle():
             'oda_no': random_number
         })
         
-        if result in not_exist_situtations:
+        if result in non_exist_situations:
+            
             database_reservation.insert_one({
                 '_id': str(uuid.uuid4()),
-                'whoose': random_id,
+                'whoose': new_user['_id'],
                 'baslangic_tarihi': date.today().strftime('%d.%m.%Y'),
                 'bitis_tarihi': '02.05.2023',
-                'oda_no': random.randint(1, 50),
+                'oda_no': random_number,
                 'otel_ismi': otel_name,
             })
+
+            database_roomswitch.insert_one({
+                '_id': new_user['_id'],
+                'main': random_number
+            })
+
+
             run = False
 
     del run
@@ -331,6 +432,11 @@ def oda_satin_al():
         'oda_no': oda_no,
         'otel_ismi': otel_name,
     })
+
+    database_roomswitch.insert_one({
+        '_id': session_user['_id'],
+        'main': oda_no
+    })
     return redirect('/profile')
 
 @app.route('/goto_user', methods=["POST"])
@@ -342,6 +448,13 @@ def goto_user():
 
     return redirect(f"/profile/{user['_id']}")
 
+@app.route('/goto_user/<string:email>', methods=["GET"])
+def goto_user_via_url(email):
+    user = database_user.find_one({
+        'email': email
+    })
+
+    return redirect(f"/profile/{user['_id']}")
 
 @app.route('/profile/<string:uid>', methods=["GET"])
 def profile_via_id(uid: str):
@@ -373,9 +486,30 @@ def profile():
             oda_no_string += f"{oda_nolar_list[oda_no]} nolu odalar."
             break
         oda_no_string += f"{oda_nolar_list[oda_no]}, "
-        
+    
+    if len(oda_nolar_list) == 1:
+        oda_no_string = f"{oda_nolar_list[0]} nolu oda."
+    if len(oda_nolar_list) == 0:
+        oda_no_string = "Henüz oda ayırtmamışsınız."
     session_user['oda_nolar'] = oda_no_string
-    return render_template('profile.html', user = session_user)
+    
+    siparisler = database_siparis.find_one({
+        '_id': session_user['_id']
+    })
+    if siparisler:
+        session['siparis'] = siparisler
+        del session['siparis']['_id']
+        len_of_siparis = len(siparisler)
+    else:
+        session['siparis'] = None
+        len_of_siparis = 0
+    
+    main_room = database_roomswitch.find_one({
+        '_id': session_user['_id']
+    })
+    main_room = main_room.get('main')
+    
+    return render_template('profile.html', user=session_user, session=session, len_of_siparis=len_of_siparis,main_room=main_room)
 
 @app.route('/modify_json/<string:fte>/<string:key>/<string:out>/', methods=["GET"])
 def modify_json(fte, key, out):
@@ -415,7 +549,7 @@ def giris():
         return render_template('login.html')
     else:
         return redirect('/')
-    
+
 @app.route('/anasayfa/')
 @app.route('/anasayfa')
 @app.route('/index/')
@@ -515,7 +649,7 @@ def api_ce(data):
 
 @app.route('/api/cd/<string:data>', methods=["POST", "GET"])
 def api_cd(data: str):
-    global not_exist_situtations
+    global non_exist_situations
     if not is_logged():
         return redirect('/giris')
 
@@ -567,7 +701,7 @@ def login_via_url(username: str, password: str):
         'sifre': password
     })
 
-    if result not in not_exist_situtations:
+    if result not in non_exist_situations:
         session['user_id'] = str(result['_id'])
         siparisler = database_siparis.find_one({
             'whoose': result['_id']
@@ -630,7 +764,7 @@ def register():
         "tc_kimlik_no": tc_kimlik_no,
         "telefon_numarasi": telefon_numarasi,
     })
-    if (is_user_exist in not_exist_situtations):
+    if (is_user_exist in non_exist_situations):
         database_user.insert_one({
             ######################################################
             'kullanici_adi': username,                           #

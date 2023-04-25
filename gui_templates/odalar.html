@@ -26,13 +26,13 @@
       </span>
     </a>
 </nav>
-<div id="container" style="border-radius: 2.5px;height: 100%; width: 100%;">
+<div id="container" style="border-radius: 2.5px; height: 100%; width: 100%;">
   <div id="center-side">
-    <form action="/oda_ayirt" method="POST" name="oda_ayirma">
-      <input style="padding: 10px; border-radius: 20px; background-color: crimson; border: 1px solid white; color:white; filter: drop-shadow(0 0 0.75em crimson);" 
+    <form style="position: relative; right: 150px; " action="/oda_ayirt" method="POST" name="oda_ayirma">
+      <input style="font-size: 25px; padding: 10px; border-radius: 20px; background-color: crimson; border: 1px solid white; color:white; filter: drop-shadow(0 0 0.75em crimson);" 
         id="oda_no" name="oda_no" type="text" placeholder="Oda numarası arat..." translate="no" required="" autocomplete="off"/>
       <a>
-        <button style="border-radius: 20px; padding: 10px; color:white; border: 1px solid crimson; background-color: crimson; filter: drop-shadow(0 0 0.75em crimson);" type="submit">
+        <button style="font-size: 25px; border-radius: 20px; padding: 10px; color:white; border: 1px solid crimson; background-color: crimson; filter: drop-shadow(0 0 0.75em crimson);" type="submit">
           ODA ARAT
         </button>
       </a>
@@ -41,12 +41,12 @@
   <div id="center-side" style="position: absolute; left: 50%;">
     {% if oda_sayisi > 0 %}
         {% for oda in oda_bilgileri %}
-        <button id="center-btn" style="margin-inline: 20px; color:white; background: crimson;">
+        <button id="center-btn" style="font-size: 40px; margin-inline: 20px; color:white; background: crimson;">
             {{ oda }}. ODA
         </button>
         {% endfor %}
     {% else %}
-        <center style="position:absolute; left: -50%; color:white; font-size: 60px;">
+        <center style="font-size: 40px; position:absolute; left: -50%; color:white; font-size: 60px;">
             HENÜZ ODA AYIRTMAMIŞSINIZ...
         </center>
     {% endif %}

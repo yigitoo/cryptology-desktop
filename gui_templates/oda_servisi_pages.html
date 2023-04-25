@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name=application-name content="GalBul">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="/gui_static/css/index.css">
+    <link rel="stylesheet" href="/gui_static/css/ui.css">
+    <link rel="icon" href="{{ url_for('static',filename='logo.png') }}">
+    <title>Kodların Seyyahı Otel ~ Ana Sayfa</title>
+    </head>
+<body>
+<nav class="navbar navbar-dark justify-content-between">
+    <a href="/logout" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+      <button style="cursor: pointer; padding: 10px; border: 1px solid white; color:white; background-color: #c51b12; border-radius: 2.5%; filter: drop-shadow(0 0 0.75rem crimson);">
+        Çıkış yap
+      </button>
+    </a>
+    <a href="/profile" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+      <span>
+        <img src="https://avatars.dicebear.com/api/micah/{{user._id}}.svg" style="display:inline-block; margin-left: 5%; position: fixed; top: 10px; right: 15px; width:2.5rem; height:2.5rem; background-color: #0c25e4; border: 1px solid white; border-radius: 50%;" alt="{{user.kullanici_adi}}" />
+      </span>
+    </a>
+</nav>
+<div id="container" style="border-radius: 2.5px;height: 100%; width: 100%;">
+    <div id="center-side" style="padding: 200px; position: absolute; left: 28%; top: 6%;">
+      <div class="item" 
+      style="margin-right: 20px; padding: 10px; margin-top: .8rem; background-color: white; border: 1px solid crimson; border-radius: 50px; filter: drop-shadow(0 0 .75em crimson);">
+      <span style="text-align:center; border: 1px solid transparent; filter:drop-shadow(0 0 .75em blue);">
+        <img src="/gui_static/oda_servisi/{{ item_id }}.jpeg" style="width: 400px; height: 200px;"/>
+      </span>
+      <br><br>
+      <div style="padding: 10px; text-align:center;">
+        <b>
+          {% if "_" in item_id %}
+            {{ item_id.split('_')[0] + ' ' + item_id.split('_')[1]}}
+          {% else %}
+            {{ item_id }}
+          {% endif %}
+        </b>
+        <br>
+        <b>
+          <a href="#">
+            <span style="border: 1px solid #1d630b; background-color: #6eb411; color: #fff; padding-left: 20px; padding-right: 20px; margin:10px; border-radius: 20px;" onclick="increase()">
+              + 
+            </span>
+          </a>  
+          <span id="number">
+              1
+          </span>
+          <a href="#">
+            <span style="border: 1px solid #000; background-color: #c51b12; color: #fff; padding-left: 20px; padding-right: 20px; margin: 10px; border-radius: 20px;" onclick="decrease()">
+              -
+            </span>
+          </a>
+          <br><br>
+          <a onclick="send_form()">
+            <button style="color: white; background-color: blue; cursor:pointer; border: 1px solid blue; border-radius: 20px; filter: drop-shadow(0 0 .75em blue)">
+              Siparişi gönder
+            </button>
+          </a>
+        </b>
+      </div>
+    </div>
+    </div>
+</div>
+</div>
+<script src="/gui_static/js/oda_servisi.js"></script>
+</body>
+</html>

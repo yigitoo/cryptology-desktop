@@ -60,7 +60,28 @@
             <b>
                 Kullanıcı Tipi: {% if user.admin %} Admin/Yönetici {% else %} Ziyaretçi/Konuk {% endif %}
             </b><br>
-
+            {% if not user.admin %}
+            <b>
+              <br>
+              {{ main_room }}. oda için siparişlerin: <br>
+              {% if len_of_siparis > 0 %}
+                <ol>
+                {% for siparis, sayisi in session['siparis'].items() %}
+                  <li> 
+                    {{ sayisi }} tane {% if "_" in siparis %}
+                      {{ siparis.split("_")[0] + ' ' + siparis.split('_')[1] }}
+                    {% else %}
+                      {{siparis}}
+                    {% endif %}
+                  </li>
+                {% endfor %}
+                </ol>
+              {% else %}
+                Siparişiniz yolda / Şu anda sipariş ettiğiniz herhangi bir şey yok.
+              {% endif %}
+            </b><br>
+            {% else %}
+            {% endif %}
           </div>
         </div>
       </div>

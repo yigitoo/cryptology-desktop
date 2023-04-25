@@ -1,17 +1,42 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Kullanıcı Mevcut</title>
-</head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahip olduğunuz odalar ~ Kodların Seyyahı Otel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name=application-name content="GalBul">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="/gui_static/css/index.css">
+    <link rel="stylesheet" href="/gui_static/css/ui.css">
+    <link rel="icon" href="{{ url_for('static',filename='logo.png') }}">
+    <title>Kodların Seyyahı Otel ~ Oda Ayırtma</title>
+    </head>
 <body>
+<nav class="navbar navbar-dark justify-content-between">
+    <a href="/odalar" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+      <button style="cursor: pointer; padding: 10px; border: 1px solid white; color:white; background-color: #c51b12; border-radius: 2.5%; filter: drop-shadow(0 0 0.75rem crimson);">
+          <img src="/gui_static/go_back.svg" alt="Go back"/>
+      </button>
+    </a>
+    <a href="/profile" style="position: absolute; margin-top: 70px; padding-right: 15%;">
+      <span>
+        <img src="https://avatars.dicebear.com/api/micah/{{user._id}}.svg" style="display:inline-block; margin-left: 5%; position: fixed; top: 10px; right: 15px; width:2.5rem; height:2.5rem; background-color: #0c25e4; border: 1px solid white; border-radius: 50%;" alt="{{user.kullanici_adi}}" />
+      </span>
+    </a>
+</nav>
+<div id="container" style="position: absolute; left: -10%; top: -2.5%; border-radius: 2.5px;height: 100%; width: 100%;">
+    <div id="center-side">
+          <center style="color:white; font-size: 60px;">
+              KULLNICI BİLGİERİ MEVCUTTUR LÜTFEN,<br>BAŞKA BİLGİLERİ GİRİNİZ VEYA HESABINIZLA GİRİŞ YAPINIZ!
+          </center>
+    </div>
+  </div>
 <script>
-   window.alert("Kullanıcı Mevcut!")
-   setTimeout(() => {
-      window.location.href = '/giris'
-   }, 200)
+setTimeout(() => {
+    window.location.href = '/odalar'
+}, 2000);
 </script>
 </body>
 </html>
