@@ -181,6 +181,8 @@ def oda_servisi_pages(item_id: str):
         result = database_siparis.find_one({
             '_id': session_user['_id']
         })
+        if result in non_exist_situations:
+            return redirect('/oda_servisi')
         if not result.get(item_id):
 
             database_siparis.update_one({
