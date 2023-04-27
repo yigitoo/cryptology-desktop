@@ -1,0 +1,9 @@
+cikis: Yine bekleriz..!
+merhaba: Kodların Seyyahı otel sistemine hoş geldiniz!
+kullbilgi: Kullanıcı bilgileri getiriliyor..!
+
+Kodların Seyyahı Otel sistemine hoş geldiniz..!: cikis
+Yine Bekleriz..!: merhaba
+merhaba: Kodların Seyyahı Otel sistemine hoş geldiniz..!
+kullbilgi: Kullanıcı bilgileri getiriliyor..!
+cikis: Yine bekleriz..!

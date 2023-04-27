@@ -5,6 +5,7 @@
     <title>Ana Sayfa</title>
     <link rel="stylesheet" href='/gui_static/css/ui.css'>
     <link rel="stylesheet" href="/gui_static/css/form.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body style="overflow: hidden;">
@@ -84,7 +85,14 @@
             {{ elist }}
         </h1>
     </div>
-
-<script></script>
+<script>
+var sound = new Howl({
+    src: ['/gui_static/sesler/merhaba.mp3'],
+    volume: 2,
+    autoplay: true,
+});
+    
+sound.play();
+</script>
 </body>
 </html>

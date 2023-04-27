@@ -14,7 +14,7 @@ let questions = [
   {
     numb: 2,
     question: "Aşağıdakilerden hangisi kötü şifre örneklerinden biri değildir?",
-    answer: "D)74Q@4.!r"",
+    answer: "D)74Q@4.!r\"",
     options: [
       "A)123456a",
       "B)Asdf1234",
@@ -119,7 +119,7 @@ let questions = [
     numb: 10,
     question:
       "Aşağıda verilen parola örneklerinden hangisi diğerlerine göre daha güçlü paroladır?",
-    answer: "D)74Q@4.!r"",
+    answer: "D)74Q@4.!r\"",
     options: [
       "A)7dsdsmf1",
       "B)@_&4A-f6",
