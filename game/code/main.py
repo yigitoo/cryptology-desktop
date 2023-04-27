@@ -4,6 +4,7 @@ from level import Level
 from overworld import Overworld
 from ui import UI
 import threading
+import os
 
 project_name = "KODLARIN SEYYAHI"
 
@@ -76,8 +77,9 @@ clock = pygame.time.Clock()
 game = Game()
 def check_qa():
 	while True:
+		os.system('python3 ')
 		data = open('qaresult.txt','r').read()
-		if data == "1":
+		if int(data) == 1:
 			game.change_health(+20)
 		else:
 			game.change_health(-20)
@@ -91,8 +93,6 @@ while True:
 	
 	screen.fill('grey')
 	game.run()
-	
-	
 
 	pygame.display.update()
 	clock.tick(60)

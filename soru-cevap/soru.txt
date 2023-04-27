@@ -1,0 +1,104 @@
+Bilgi Güvenliğinden kim sorumludur?
+A)Herkes
+B)Bilgi Teknolojileri Departmanı
+C)Genel Müdür
+D)Müşteri
+E)Hiçkimse
+
+Aşağıdakilerden hangisi kötü şifre örneklerinden biri değildir?
+A)123456a
+B)Asdf1234
+C)şifre123
+D)74Q@4.!r
+E)2008yg.d
+
+Aşağıdakilerden hangisi bilgi güvenliği için yapılması gerekenlerden biri değildir?
+A)Şifrenizi izin veya herhangi bir gerekçe ile kimse ile paylaşmayınız.
+B)Çok yakın ve güvendiğiniz iş arkadaşlarınız dışında kimsenin bilgisayarınızda çalışmamasına özen göstermeniz.
+C)Şifrenizde rakam ve özel karakterler kullanmamanız.
+D)Güvenli olmadığını düşündüğünüz mekânlarda kurumsal şifrenizi kullanmayınız. 
+E)En az 8 karakterli şifre oluşturmanız.
+
+Aşağıdakilerden hangisi Bilgi Güvenliğinin sağlanmasında çalışanlara düşen görevlerden değildir?
+A)Karmaşık şifre belirlenmesi
+B)PC başından ayrılırken PC mutlaka kilitlenmelidir
+C)Müşteri ve şirket bilgilerinin 3. Şahıslarla paylaşılmaması
+D)Ortak kullanım alanlarının temiz tutulması (bardak vb. çöplerin çöp kutusuna atılması.)
+E)Resepsiyon kısmına izin dahilinde olmadan ilgili personel dışındaki kimsenin girmemesine özen göstermek.
+
+Aşağıdakilerden hangisi paylaşmamanız gereken kişisel verileriniz arasında yer almaz? 
+A)Evinizin adresi 
+B)Okulunuzun adı ve adresi 
+C)Türkiye’nin başkenti 
+D)Bir yakınınıza ait cep telefonu numarası
+E)T.C kimlik numarası
+
+Otel tercihini yaparken aşağıdakilerden hangisini göz önünde bulundurmak daha büyük önem arz eder?
+A)Havuzlu olması
+B)Açık büfeye sahip olması
+C)Personellerin ilgili olması
+D)Veri Güvenliğine önem vermesi
+E)Deniz manzarasına sahip olması
+
+Bilgi güvenliği üç temel unsurdan oluşur. Bu üç temel unsur nelerdir?
+A)Gizlilik, Öznellik, Erişebilirlik
+B)Doğruluk, Bütünlük, Erişilebilirlik
+C)Gizlilik, Bütünlük, Kullanılabilirlik
+D)Kullanılabilirlik, Gizlilik, Nesnellik
+E)İlkesellik, Gizlilik, Tekillik
+
+Güçlü Parola oluştururken aşağıda verilen kriterlerin hangisine dikkat edilmez?
+A)Çoğu kişinin kullandığı parolaları kullanmamaya
+B)Doğum tarihi gibi özel bilgilerin kullanılmasına
+C)Özel Karakterlerin kullanılmasına
+D)Büyük harf küçük harf kullanılmasına
+E)En az 8 karakterden oluşmasına
+
+9. Aşağıdakilerden hangisi zararlı yazılımlardan korunmak için alınacak tedbirlerden biri değildir?
+A)Diski düzenli olarak harici bir yere yedeklemek
+B)Tarayıcıları güncel tutmak
+C)Lisanslı anti-virüs programı kullanmak
+D)İşletim sisteminin güncelleştirmek
+E)Mail adresine gelen mailleri zamanında okumak
+
+Aşağıda verilen parola örneklerinden hangisi diğerlerine göre daha güçlü paroladır?
+A)7dsdsmf1
+B)@_&4A-f6
+C)H.34.323
+D)Qwer1234
+E)ERTY3456
+
+Aşağıdakilerden hangisi bilgi uygun şekilde korunmazsa oluşabilecek sonuçlardan değildir ?
+A)Bilginin içeriğinde yetkisiz kişiler tarafından değişiklik yapılabilir
+B)Gizli bilgiler açığa çıkabilir
+C)Daha güvende hissederiz
+D)Bilgiye erişim mümkün olmayabilir.
+E)Kişisel bilgiler şantaj amaçlı kullanılabilir.
+
+Aşağıda verilen ifadelerden hangisi yanlıştır ?
+A)Saldırganlar (hackerlar) çoğunlukla kullanıcı hatalarını kullanmaktadırlar.
+B)Oluşan güvenlik açıklıklarının büyük kısmı kullanıcı hatasından kaynaklanmaktadır.
+C)Bilgi güvenliğinin en önemli parçası kullanıcı güvenlik bilincidir.
+D)Kullanıcılar tarafından dikkat edilebilecek bazı kurallar sistemlerin güvenliğinin sağlanmasında kritik bir öneme sahiptir.
+E)Bilgi Güvenliğinin sağlanmamasında tek etken bilgi teknolojileri departmanıdır.
+
+Bilgi güvenliğini oluşturan bazı unsurlar bulunmaktadır. Aşağıda verilen durumlardan hangisi bilginin yetkisiz kişilerin eline geçmemesi için kullanılan unsura verilen addır?
+A)Bütünlük
+B)Erişim
+C)Gizlilik
+D)Etik
+E)Güvenlik
+
+İnternet üzerindeki bilgilerin sadece bir kısmının paylaşıma açılması, herkesin kendi özel bilgilerini saklaması anlamına gelen kavram aşağıdakilerden hangisidir?
+A)Erişim                
+B)Gizlilik    
+C)Kullanılabilirlik
+D)Fikri mülkiyet    
+E)Doğruluk
+
+Aşağıda verilen ifadelerden hangisi doğru değildir?
+A)Kullanıcı adı ve parola bilgiye erişim yetkisi olarak kullanılır.
+B)Parolası çalınan kişi parolasının ele geçirildiğini ispatlaması oldukça zordur.
+C)Parola bilgi güvenliğinin en önemli ögesidir.
+D)Parolası ele geçirilen kişi ekonomik kayba maruz kalabilir.
+E)Parola sahibi hiçbir şekilde yasal yaptırıma maruz kalamaz.
