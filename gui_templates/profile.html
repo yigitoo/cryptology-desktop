@@ -60,7 +60,7 @@
             <b>
                 Kullanıcı Tipi: {% if user.admin %} Admin/Yönetici {% else %} Ziyaretçi/Konuk {% endif %}
             </b><br>
-            {% if not user.admin %}
+            {% if (not user.admin) and (main_room == "YOK") %}
             <b>
               <br>
               {{ main_room }}. oda için siparişlerin: <br>

@@ -509,8 +509,10 @@ def profile():
     main_room = database_roomswitch.find_one({
         '_id': session_user['_id']
     })
-    main_room = main_room.get('main')
-    
+    if main_room:
+        main_room = main_room.get('main')
+    else:
+        main_room == "YOK"
     return render_template('profile.html', user=session_user, session=session, len_of_siparis=len_of_siparis,main_room=main_room)
 
 @app.route('/modify_json/<string:fte>/<string:key>/<string:out>/', methods=["GET"])
