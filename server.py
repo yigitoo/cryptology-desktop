@@ -434,6 +434,9 @@ def oda_satin_al():
         'oda_no': oda_no,
         'otel_ismi': otel_name,
     })
+    database_roomswitch.delete_one({
+        '_id': session_user['_id']
+    })
 
     database_roomswitch.insert_one({
         '_id': session_user['_id'],
@@ -444,14 +447,16 @@ def oda_satin_al():
 @app.route('/goto_user', methods=["POST"])
 def goto_user():
     email = request.form['email']
+    print(email)
     user = database_user.find_one({
         'email': email
     })
-
-    return redirect(f"/profile/{user['_id']}")
-
+    if user:
+        return redirect(f"/goto_user/{user['email']}")
+    else:
+        return redirect('/')
 @app.route('/goto_user/<string:email>', methods=["GET"])
-def goto_user_via_url(email):
+def goto_user_via_url(email: str):
     user = database_user.find_one({
         'email': email
     })

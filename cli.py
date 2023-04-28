@@ -579,6 +579,7 @@ if __name__ == "__main__":
     if sys.argv[1] in ["-e", "-ce", "--complete-enc"]:
         clear_dirs()
         complete_encryption(data, outVideo, kfname)
+        os.system('vlc out.mp4')
     if sys.argv[1] in ["-d", "-cd", "--complete-dec"]:
         complete_decryption(outVideo, kfname)
         
